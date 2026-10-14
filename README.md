@@ -79,7 +79,6 @@ The arcade machine consists of multiple subsystems:
 |----------|-------------|
 | docs | Technical documentation and drawings |
 | src | LED control software |
-| wiring | Electrical design and wiring information |
 
 ---
 
