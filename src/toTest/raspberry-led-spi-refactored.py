@@ -11,9 +11,11 @@ from evdev import InputDevice, ecodes, categorize
 # ----------------------------
 # CONFIG
 # ----------------------------
+
+# Todo: Werte extrahieren in eine config-Datei
 NUM_LEDS = 65
-HOLD_THRESHOLD = 2.0        # Sekunden für langen Druck (Moduswechsel)
-DEBOUNCE_TIME = 0.25        # Sekunden Entprellung
+HOLD_THRESHOLD = 2.0
+DEBOUNCE_TIME = 0.25
 
 device = InputDevice("/dev/input/event0")
 led_button = ecodes.BTN_TOP2
@@ -24,6 +26,7 @@ mode = 0
 current_mode_type = 0
 mode_lock = threading.Lock()
 
+# Todo: durch key-values ersetzen
 static_colors = [
     (255, 0, 0),
     (255, 255, 0),
@@ -55,11 +58,12 @@ signal.signal(signal.SIGINT, cleanup)
 # ----------------------------
 # HELPER
 # ----------------------------
+# Todo: Farben in eigene Datei/Klasse handeln
 def hsv_to_rgb(h, s=1.0, v=1.0):
     r, g, b = colorsys.hsv_to_rgb(h % 1.0, s, v)
     return int(r * 255), int(g * 255), int(b * 255)
 
-
+# Todo: Modus-Logik maybe in eigene Datei/Klasse extrahieren
 def cycle_mode_type():
     global mode, current_mode_type
     subtypes = {0: 3, 1: 6, 2: 1}
@@ -77,6 +81,7 @@ def advance_mode():
 # ----------------------------
 # EFFECTS
 # ----------------------------
+# Todo: In eigene Datei/Klasse extrahieren
 def breathe(breathe_time, base_hue):
     center = (NUM_LEDS - 1) / 2
     breath = (math.sin(breathe_time) + 1) / 2
@@ -115,6 +120,7 @@ def epilepsy(hue):
 # ----------------------------
 # INPUT THREAD
 # ----------------------------
+# Todo: Simplifizieren + Nach 2s hold wird direkt modus gewechselt und nicht erst beim loslassen
 def input_listener():
     """
     Kurzer Druck  → Subtyp wechseln
@@ -168,6 +174,7 @@ def input_listener():
 # ----------------------------
 # MAIN LOOP
 # ----------------------------
+# Todo: Modus extrahieren und Christmas-Tree-Structure reduzieren
 def main():
     global running
 
@@ -234,6 +241,7 @@ def main():
 # ----------------------------
 # START
 # ----------------------------
+# Todo: Main-Klasse erstellen, die das ganze steuert
 if __name__ == "__main__":
     threading.Thread(target=input_listener, daemon=True).start()
     try:
