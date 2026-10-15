@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import select
 import time
-from typing import Callable
+from collections.abc import Callable
 
 from evdev import InputDevice, KeyEvent, ecodes
 

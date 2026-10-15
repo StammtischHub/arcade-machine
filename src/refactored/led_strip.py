@@ -4,7 +4,6 @@ Die Effekte sprechen nur mit dieser Klasse, nicht direkt mit dem Treiber.
 So bleibt die Hardware an einer einzigen Stelle gekapselt.
 """
 from apa102_pi.driver import apa102
-
 from colors import OFF, Color
 
 

@@ -1,13 +1,12 @@
-import time
-import math
 import colorsys
-import threading
+import math
 import signal
 import sys
+import threading
+import time
 
 from apa102_pi.driver import apa102
-
-from evdev import InputDevice, ecodes, categorize
+from evdev import InputDevice, categorize, ecodes
 
 # ----------------------------
 # CONFIG
@@ -51,7 +50,7 @@ def convert_hsv_to_rgb(h, s=1.0, v=1.0):
     return int(r * 255), int(g * 255), int(b * 255)
 
 def update_current_mode_type():
-    global mode, current_mode_type
+    global current_mode_type
 
     if mode == 0:
         with mode_lock:
@@ -106,7 +105,7 @@ def epilepsy(hue):
 # INPUT THREAD
 # ----------------------------
 def input_listener():
-    global mode, current_mode_type, running
+    global mode, current_mode_type
     last_press = 0
     last_release = 0
 
@@ -142,7 +141,6 @@ def input_listener():
 # MAIN LOOP
 # ----------------------------
 def main():
-    global mode, current_mode_type, running
     breath_t = 0.0
     breath_hue = 0.0
     last_breath = 0.0
@@ -158,10 +156,10 @@ def main():
     while running:
         with mode_lock:
             current_mode = mode
-            current_mode_type = current_mode_type
+            current_type = current_mode_type
 
         if current_mode == 0:
-            if current_mode_type == 0:
+            if current_type == 0:
                 breathe(breath_t, breath_hue)
                 current_breath = (math.sin(breath_t) + 1) / 2
                 if current_breath < 0.05 <= last_breath:
@@ -169,7 +167,7 @@ def main():
                 last_breath = current_breath
                 breath_t += 0.04  # Geschwindigkeit Breath
 
-            elif current_mode_type == 1:
+            elif current_type == 1:
                 scanner(scanner_pos, scanner_hue)
                 if scanner_pos >= NUM_LEDS - 1:
                     scanner_direction = -1
@@ -178,17 +176,17 @@ def main():
                 scanner_pos += 0.35 * scanner_direction # Geschwindigkeit Scanner
                 scanner_hue += 0.002 # Farbshift
 
-            elif current_mode_type == 2:
+            elif current_type == 2:
                 epilepsy(epilepsy_hue)
                 epilepsy_hue += 0.12
 
-        elif current_mode == 1 and current_static_color != static_colors[current_mode_type]:
+        elif current_mode == 1 and current_static_color != static_colors[current_type]:
             strip.clear_strip()
             for pixel in range(NUM_LEDS):
-                r, g, b = static_colors[current_mode_type]
+                r, g, b = static_colors[current_type]
                 strip.set_pixel(pixel, r, g, b)
             strip.show()
-            current_static_color = static_colors[current_mode_type]
+            current_static_color = static_colors[current_type]
 
         elif current_mode == 2 and current_static_color != (0, 0, 0):
             strip.clear_strip()
