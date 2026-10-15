@@ -5,7 +5,7 @@ So bleibt die Hardware an einer einzigen Stelle gekapselt.
 """
 from apa102_pi.driver import apa102
 
-from colors import BLACK, Color
+from colors import OFF, Color
 
 
 class LedStrip:
@@ -25,7 +25,7 @@ class LedStrip:
 
     def clear(self) -> None:
         """Setzt alle Pixel auf Schwarz (ohne anzuzeigen)."""
-        self.fill(BLACK)
+        self.fill(OFF)
 
     def show(self) -> None:
         """Überträgt den aktuellen Puffer auf die LEDs."""

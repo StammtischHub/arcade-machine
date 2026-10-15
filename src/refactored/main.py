@@ -4,7 +4,7 @@ import signal
 import config
 from app import LedApp
 from button import Button
-from colors import BLACK
+from colors import OFF, STATIC_COLORS
 from effects import Breathe, RainbowStrobe, Scanner, SolidColor
 from led_strip import LedStrip
 from modes import Mode, ModeController
@@ -14,8 +14,8 @@ def build_modes() -> ModeController:
     """Definiert die Hauptmodi. Neue Effekte/Modi werden nur hier eingetragen."""
     return ModeController([
         Mode("Colorful", (Breathe(), Scanner(), RainbowStrobe())),
-        Mode("Static", tuple(SolidColor(color) for color in config.STATIC_COLORS.values())),
-        Mode("Off", (SolidColor(BLACK),)),
+        Mode("Static", tuple(SolidColor(color) for color in STATIC_COLORS.values())),
+        Mode("Off", (SolidColor(OFF),)),
     ])
 
 

@@ -14,7 +14,7 @@ class Mode:
 
 
 class ModeController:
-    """Hält fest, welcher Modus und welcher Effekt gerade aktiv ist.
+    """Hält fest, welcher Modus und welcher Effekt gerade aktiv sind.
 
     Wird vom Taster-Thread verändert und von der Render-Schleife gelesen,
     deshalb ist jeder Zugriff durch einen Lock geschützt.

@@ -20,13 +20,13 @@ class Button:
     """
 
     def __init__(
-        self,
-        device_path: str,
-        key_code: int,
-        on_short_press: Callable[[], None],
-        on_long_press: Callable[[], None],
-        hold_threshold: float,
-        debounce_time: float,
+            self,
+            device_path: str,
+            key_code: int,
+            on_short_press: Callable[[], None],
+            on_long_press: Callable[[], None],
+            hold_threshold: float,
+            debounce_time: float,
     ):
         self._device = InputDevice(device_path)
         self._key_code = key_code
@@ -35,9 +35,9 @@ class Button:
         self._hold_threshold = hold_threshold
         self._debounce_time = debounce_time
 
-        self._pressed_since: float | None = None  # None = Taste nicht gedrückt
+        self._pressed_since: float | None = None
         self._long_press_fired = False
-        self._last_edge = 0.0                     # Zeitpunkt des letzten gültigen Drückens/Loslassens
+        self._last_edge = 0.0
 
     def listen(self) -> None:
         """Blockierende Ereignisschleife – in einem eigenen Thread starten."""
@@ -45,7 +45,6 @@ class Button:
             while True:
                 readable, _, _ = select.select([self._device], [], [], self._time_until_hold())
                 if not readable:
-                    # Timeout: Schwelle erreicht und Taste ist noch gedrückt
                     self._long_press_fired = True
                     self._on_long_press()
                     continue
@@ -67,7 +66,6 @@ class Button:
         now = time.monotonic()
 
         if state == KeyEvent.key_down:
-            # Prellen: schon gedrückt oder zu kurz nach dem letzten Wechsel
             if self._pressed_since is not None or now - self._last_edge < self._debounce_time:
                 return
             self._pressed_since = now
@@ -76,10 +74,8 @@ class Button:
 
         elif state == KeyEvent.key_up:
             if self._pressed_since is None:
-                return  # Loslassen ohne gültiges Drücken → Prellen
+                return
             if not self._long_press_fired:
                 self._on_short_press()
             self._pressed_since = None
             self._last_edge = now
-
-        # KeyEvent.key_hold (Auto-Repeat) wird bewusst ignoriert

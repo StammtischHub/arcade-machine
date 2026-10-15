@@ -6,7 +6,7 @@ from typing import NamedTuple
 
 
 class Color(NamedTuple):
-    """RGB-Farbe mit Kanälen von 0–255. Lässt sich wie ein Tupel entpacken."""
+    """RGB-Farbe mit Kanälen von 0 bis 255. Lässt sich wie ein Tupel entpacken."""
 
     r: int
     g: int
@@ -23,4 +23,13 @@ class Color(NamedTuple):
         return Color(int(self.r * factor), int(self.g * factor), int(self.b * factor))
 
 
-BLACK = Color(0, 0, 0)
+STATIC_COLORS: dict[str, Color] = {
+    "red": Color(255, 0, 0),
+    "yellow": Color(255, 255, 0),
+    "green": Color(0, 255, 0),
+    "cyan": Color(0, 255, 255),
+    "blue": Color(0, 0, 255),
+    "magenta": Color(255, 0, 255),
+}
+
+OFF = Color(0, 0, 0)
